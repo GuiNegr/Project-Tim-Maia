@@ -8,6 +8,9 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import Controler.CreateDao;
+import Controler.DeleteDao;
+import Controler.UpdateDAO;
 import Model.Produto;
 
 public class GUI extends JFrame implements ActionListener {
@@ -19,6 +22,7 @@ public class GUI extends JFrame implements ActionListener {
     private JButton delete;
     private JButton selectByVal;
     private JButton selectByType;
+    private JButton update;
     private JButton selectByQtd;
 
     public GUI(){
@@ -27,16 +31,18 @@ public class GUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        selectByQtd = botao("Select By Qtd");
-        selectByType = botao("SELECT BY TYPE");
-        selectByVal = botao("SELECT BY VALIDATE");
-        delete = botao("delete");
-        create = botao("create");
+        selectByQtd = botao("SLC/QUANTIDADE");
+        selectByType = botao("SLC/TIPO");
+        selectByVal = botao("SLC/VALIDADE");
+        delete = botao("EXCLUIR");
+        create = botao("ADICIONE");
+        update = botao("ATUALIZAR");
 
         btnPainel = painel();
-        btnPainel.setLayout(new GridLayout(1,5));
+        btnPainel.setLayout(new GridLayout(1,6));
         btnPainel.add(create);
         btnPainel.add(delete);
+        btnPainel.add(update);
         btnPainel.add(selectByQtd);
         btnPainel.add(selectByVal);
         btnPainel.add(selectByType);
@@ -67,6 +73,7 @@ public class GUI extends JFrame implements ActionListener {
         botao.addActionListener(this);
         botao.setBackground(new Color(139, 114, 236, 255));
         botao.setForeground(new Color(231, 201, 144));
+        botao.setFont(new Font("arial", Font.BOLD, 14));
         add(botao);
         return botao;
     }
@@ -79,16 +86,16 @@ public class GUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == create){
-            JOptionPane.showMessageDialog(null,"ESSE É O CREATE");
             String nome = JOptionPane.showInputDialog("informe o nome do produto");
             Date valdiade = obterDataValidade();
             String tipo = obterTipoProduto();
             String quantidade = JOptionPane.showInputDialog("informe a quantiade");
             Produto produto = new Produto(nome,valdiade,tipo,quantidade);
-            System.out.println(produto);
+            new CreateDao().create(produto);
         }
         if(e.getSource() == delete){
-            JOptionPane.showMessageDialog(null,"ESSE É O DELETE");
+            String id = JOptionPane.showInputDialog("POR FAVOR ME INFORME O ID DO PRODUTO DESEJADO");
+            new DeleteDao().delete(id);
         }
         if(e.getSource() == selectByQtd){
             JOptionPane.showMessageDialog(null,"ESSE É O SELECT BY QTD");
@@ -98,6 +105,10 @@ public class GUI extends JFrame implements ActionListener {
         }
         if(e.getSource() == selectByType){
             JOptionPane.showMessageDialog(null,"ESSE É O SELECT BY TYPE");
+        }
+        if(e.getSource() == update){
+            String id = JOptionPane.showInputDialog("Informe o id do produto cadastrado");
+            escolhas(id);
         }
 
     }
@@ -129,4 +140,47 @@ public class GUI extends JFrame implements ActionListener {
         );
         return tipo;
     }
+    public int opcao(){
+        String[] opções = {"Nome do produto","tipo do produto","validade do produto","quantidade do produto", "todo o produto"};
+      Object opcao = JOptionPane.showInputDialog(null,"ESCOLHA QUE PRODUTO ALTERAR","CAIXA DE ESCOLHAS",
+              JOptionPane.DEFAULT_OPTION,null,opções,opções[0]
+              );
+
+      if(opcao != null){
+          for(int i = 0; i < opções.length;i++){
+              if(opcao.equals(opções[i])){
+                  return i;
+              }
+          }
+      }
+      return -1;
+    }
+    public void escolhas(String id){
+        int opcoes = opcao();
+        if(opcoes == 0){
+            String nome = JOptionPane.showInputDialog("informe o novo nome do produto");
+            new UpdateDAO().updateNome(nome,id);
+        }
+        else if(opcoes == 1){
+            String tipo = obterTipoProduto();
+            new UpdateDAO().updateTipo(tipo,id);
+        }
+        else if(opcoes == 2){
+            Date validade = obterDataValidade();
+            new UpdateDAO().updateValidade(validade,id);
+        }
+        else if(opcoes == 3){
+            String qtd = JOptionPane.showInputDialog("Informe a quantidade do produto");
+            new UpdateDAO().updateQtd(qtd,id);
+        }
+        else if (opcoes == 4){
+            String nome = JOptionPane.showInputDialog("informe o nome do produto");
+            Date valdiade = obterDataValidade();
+            String tipo = obterTipoProduto();
+            String quantidade = JOptionPane.showInputDialog("informe a quantiade");
+            Produto produto = new Produto(nome,valdiade,tipo,quantidade);
+            new UpdateDAO().update(produto,id);
+        }
+    }
+
 }
