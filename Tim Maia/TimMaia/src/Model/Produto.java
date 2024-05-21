@@ -2,7 +2,7 @@ package Model;
 
 import java.sql.Date;
 
-public class Produto {
+public class Produto implements Comparable<Produto>{
     private String id;
     private String nome_produto;
     private java.sql.Date validade_produto;
@@ -73,5 +73,12 @@ public class Produto {
                 "VALIDADE DO PRODUTO: " + validade_produto +
                 "TIPO DO PRODUTO: " + tipo_produto + '\'' +
                 "QTD DO PRODUTO: " + qtd_produto + '\'';
+    }
+
+    @Override
+    public int compareTo(Produto o) {
+        int thisId = Integer.parseInt(this.id);
+        int otherId = Integer.parseInt(o.id);
+        return Integer.compare(thisId, otherId);
     }
 }

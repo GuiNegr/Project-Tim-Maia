@@ -19,7 +19,7 @@ public class CreateDao {
             preparedStatement.setDate(3,produto.getValidade_produto());
             preparedStatement.setString(4, produto.getQtd_produto());
             preparedStatement.execute();
-            JOptionPane.showMessageDialog(null,"Produto deleteado com sucesso");
+            JOptionPane.showMessageDialog(null,"Produto adicionado com sucesso");
         }catch (SQLException e){
             JOptionPane.showMessageDialog(null,"Erro na criação"+e.getMessage());
         }
