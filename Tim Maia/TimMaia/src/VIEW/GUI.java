@@ -86,7 +86,7 @@ public class GUI extends JFrame implements ActionListener {
         return botao;
     }
 
-    public JPanel painel() {//fornece local para alocar componentes
+    public JPanel painel() {
         JPanel painel = new JPanel();
         add(painel);
         return painel;
